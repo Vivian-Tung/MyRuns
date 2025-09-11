@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">MyRuns</string>
+    <!--    Settings strings-->
+    <string name="profile_photo">Profile photo:</string>
+    <string name="photo_desc">Capybara in a hat</string>
+    <string name="change">Change</string>
+    <string name="name">Name</string>
+    <string name="name_hint">Your name here</string>
+    <string name="email">Email:</string>
+    <string name="email_hint">Your email here</string>
+    <string name="phone">Phone</string>
+    <string name="phone_hint">Your phone here</string>
+    <string name="gender">Gender</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="grad_class">Class</string>
+    <string name="grad_class_hint">e.g. 2016</string>
+    <string name="major">Major</string>
+    <string name="major_hint">Your major here</string>
+    <string name="save">Save</string>
+
 </resources>
