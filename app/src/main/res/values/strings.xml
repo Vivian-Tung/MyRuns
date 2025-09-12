@@ -18,5 +18,6 @@
     <string name="major">Major</string>
     <string name="major_hint">Your major here</string>
     <string name="save">Save</string>
+    <string name="profile_defaults">""</string>
 
 </resources>

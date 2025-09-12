@@ -28,7 +28,8 @@
                 android:layout_height="125sp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/photo_desc"
-                android:src="@drawable/cappy">
+                android:src="@drawable/cappy"
+                android:id="@+id/imageProfile">
             </ImageView>
 
             <Button
@@ -36,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/change"
-                android:layout_marginLeft="40sp">
+                android:layout_marginLeft="40sp"
+                android:id="@+id/btnChangePhoto">
 
             </Button>
 
@@ -53,7 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name_hint"
-            android:inputType="text">
+            android:inputType="text"
+            android:id="@+id/editName">
         </EditText>
 
         <TextView
@@ -67,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email_hint"
-            android:inputType="text">
+            android:inputType="textEmailAddress"
+            android:id="@+id/editEmail">
         </EditText>
 
         <TextView
@@ -81,7 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phone_hint"
-            android:inputType="phone">
+            android:inputType="phone"
+            android:id="@+id/editPhone">
         </EditText>
 
         <TextView
@@ -125,7 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/grad_class_hint"
-            android:inputType="number">
+            android:inputType="number"
+            android:id="@+id/editClass">
         </EditText>
 
         <TextView
@@ -139,7 +145,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/major_hint"
-            android:inputType="text">
+            android:inputType="text"
+            android:id="@+id/editMajor">
         </EditText>
 
         <Button
@@ -147,7 +154,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/save"
-            android:layout_marginTop="10sp">
+            android:layout_marginTop="10sp"
+            android:id="@+id/btnSave">
         </Button>
     </LinearLayout>
 </ScrollView>
