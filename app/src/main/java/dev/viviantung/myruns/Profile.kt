@@ -3,9 +3,6 @@ package dev.viviantung.myruns
 import android.app.Activity
 import android.content.Context
 
-// save profile() -> called in oncreate and checks shared pereference object and loads it into display data; if no data saved then put in empty strings
-// load profile() -> saves user input into sharedpreference object; then shows toast to tell user data is saved
-
 class Profile {
 
     data class ProfileData(
@@ -17,14 +14,17 @@ class Profile {
         val major: String
     )
 
-    fun saveProfile(activity: Activity?){
-        // take the input from main activity and put it in a sharedpreference object
-        // write inputs to object
-//        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-//        val editor = sharedPref?.edit()
-//        // retrieve user input and save it
-//        editor.putString("user_name", nameEditText.test.toString())
+    fun saveProfile(activity: Activity?, profileData: ProfileData){
+        val sharedPref = activity?.getSharedPreferences("ProfilePreferences",Context.MODE_PRIVATE)
+        val editor = sharedPref?.edit()
+        editor?.putString("user_name", profileData.name)
+        editor?.putString("user_email", profileData.email)
+        editor?.putString("user_phone", profileData.phone)
+        editor?.putInt("user_gender", profileData.gender)
+        editor?.putInt("user_class", profileData.userClass)
+        editor?.putString("user_major", profileData.major)
 
+        editor?.apply()
     }
 
 
@@ -34,7 +34,7 @@ class Profile {
             sharedPrefs?.getString("user_name", "") ?: "",
             sharedPrefs?.getString("user_email", "") ?: "",
             sharedPrefs?.getString("user_phone", "") ?: "",
-            sharedPrefs?.getInt("user_gender", 0) ?: 0,
+            sharedPrefs?.getInt("user_gender", -1) ?: -1,
             sharedPrefs?.getInt("user_class", 0) ?: 0,
             sharedPrefs?.getString("user_major", "") ?: ""
         )

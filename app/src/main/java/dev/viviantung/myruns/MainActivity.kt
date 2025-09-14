@@ -9,6 +9,8 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.widget.Button
+import android.widget.RadioGroup
+import android.widget.RadioButton
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -29,7 +31,8 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
     // private lateinit var textView: TextView
-    private lateinit var button: Button
+    private lateinit var changeButton: Button
+    private lateinit var saveButton: Button
     private lateinit var tempImgUri: Uri
     private lateinit var myViewModel: MyViewModel
 
@@ -44,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nameEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var phoneEditText: EditText
-
+    private lateinit var genderRadioGroup: RadioGroup
     private lateinit var classEditText: EditText
     private lateinit var majorEditText: EditText
 
@@ -53,7 +56,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         imageView = findViewById(R.id.imageProfile)
         // textView = findViewById(R.id.textView) // why do we need this?
-        button = findViewById(R.id.btnChangePhoto)
+        changeButton = findViewById(R.id.btnChangePhoto)
+        saveButton = findViewById(R.id.btnSave)
+        genderRadioGroup = findViewById<RadioGroup>(R.id.genderGroup)
 
         // Initialize views
         nameEditText = findViewById(R.id.editName)
@@ -67,14 +72,17 @@ class MainActivity : AppCompatActivity() {
         nameEditText.setText(profileData.name)
         emailEditText.setText(profileData.email)
         phoneEditText.setText(profileData.phone)
+        when (profileData.gender) {
+            1 -> genderRadioGroup.check(R.id.radioFemale)
+            2 -> genderRadioGroup.check(R.id.radioMale)
+            else -> genderRadioGroup.clearCheck() // nothing selected
+        }
         if (profileData.userClass != 0) {
             classEditText.setText(profileData.userClass.toString())
         } else {
             classEditText.text.clear() // show hint if no class saved
         }
         majorEditText.setText(profileData.major)
-
-        Util.checkPermissions(this)
 
         val tempImgFile = File(
             getExternalFilesDir(null),
@@ -85,7 +93,8 @@ class MainActivity : AppCompatActivity() {
             "dev.viviantung.myruns", tempImgFile
         )
 
-        button.setOnClickListener() {
+        Util.checkPermissions(this)
+        changeButton.setOnClickListener() {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             intent.putExtra(MediaStore.EXTRA_OUTPUT, tempImgUri)
             cameraResult.launch(intent)
@@ -117,6 +126,23 @@ class MainActivity : AppCompatActivity() {
 //
 //        textView.setText(line)
 
+        saveButton.setOnClickListener() {
+            var genderValue = -1
+            val selectedId = genderRadioGroup.getCheckedRadioButtonId()
+            if (selectedId != -1) {
+                val selectedButton = findViewById<RadioButton>(selectedId)
+                genderValue = selectedButton.tag.toString().toInt()
+            }
 
+            val updatedProfile = profileData.copy(
+                name = nameEditText.text.toString(),
+                email = emailEditText.text.toString(),
+                phone = phoneEditText.text.toString(),
+                gender = genderValue,
+                userClass = classEditText.text.toString().toIntOrNull() ?: 0,
+                major = majorEditText.text.toString()
+            )
+            profileHelper.saveProfile(this, updatedProfile)
+        }
     }
 }

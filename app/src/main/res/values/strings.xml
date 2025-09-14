@@ -14,10 +14,11 @@
     <string name="female">Female</string>
     <string name="male">Male</string>
     <string name="grad_class">Class</string>
-    <string name="grad_class_hint">e.g. 2016</string>
+    <string name="grad_class_hint">e.g. 2025</string>
     <string name="major">Major</string>
     <string name="major_hint">Your major here</string>
     <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
     <string name="profile_defaults">""</string>
 
 </resources>
