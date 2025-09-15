@@ -14,11 +14,13 @@ import android.widget.RadioButton
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     // private lateinit var textView: TextView
     private lateinit var changeButton: Button
     private lateinit var saveButton: Button
+    private lateinit var cancelButton: Button
     private lateinit var tempImgUri: Uri
     private lateinit var myViewModel: MyViewModel
 
@@ -51,13 +54,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var classEditText: EditText
     private lateinit var majorEditText: EditText
 
+    val saved_profile = "Your profile data is saved!"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
         imageView = findViewById(R.id.imageProfile)
         // textView = findViewById(R.id.textView) // why do we need this?
         changeButton = findViewById(R.id.btnChangePhoto)
         saveButton = findViewById(R.id.btnSave)
+        cancelButton = findViewById(R.id.btnCancel)
         genderRadioGroup = findViewById<RadioGroup>(R.id.genderGroup)
 
         // Initialize views
@@ -143,6 +151,12 @@ class MainActivity : AppCompatActivity() {
                 major = majorEditText.text.toString()
             )
             profileHelper.saveProfile(this, updatedProfile)
+
+            Toast.makeText(this, saved_profile, Toast.LENGTH_LONG).show()
+        }
+
+        cancelButton.setOnClickListener() {
+            finish();
         }
     }
 }
