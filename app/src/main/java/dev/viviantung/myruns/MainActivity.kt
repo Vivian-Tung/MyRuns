@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraResult: ActivityResultLauncher<Intent>
 
     private val tempImgFileName = "temp_img.jpg"
-    private val profileHelper = Profile()
 
     // var for inputs
     private lateinit var nameEditText: EditText
@@ -63,22 +62,31 @@ class MainActivity : AppCompatActivity() {
         classEditText = findViewById(R.id.editClass)
         majorEditText = findViewById(R.id.editMajor)
 
+
+        // observe live data
+        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+        myViewModel.userImage.observe(this, { it ->
+            imageView.setImageBitmap(it)
+        })
+        myViewModel.profileData.observe(this, { profile ->
+            nameEditText.setText(profile.name)
+            emailEditText.setText(profile.email)
+            phoneEditText.setText(profile.phone)
+            when (profile.gender) {
+                1 -> genderRadioGroup.check(R.id.radioFemale)
+                2 -> genderRadioGroup.check(R.id.radioMale)
+                else -> genderRadioGroup.clearCheck() // nothing selected
+            }
+            if (profile.userClass != 0) {
+                classEditText.setText(profile.userClass.toString())
+            } else {
+                classEditText.text.clear() // show hint if no class saved
+            }
+            majorEditText.setText(profile.major)
+        })
+
         // load the profile + set the text to the shared preferences
-        val profileData = profileHelper.loadProfile(this)
-        nameEditText.setText(profileData.name)
-        emailEditText.setText(profileData.email)
-        phoneEditText.setText(profileData.phone)
-        when (profileData.gender) {
-            1 -> genderRadioGroup.check(R.id.radioFemale)
-            2 -> genderRadioGroup.check(R.id.radioMale)
-            else -> genderRadioGroup.clearCheck() // nothing selected
-        }
-        if (profileData.userClass != 0) {
-            classEditText.setText(profileData.userClass.toString())
-        } else {
-            classEditText.text.clear() // show hint if no class saved
-        }
-        majorEditText.setText(profileData.major)
+        myViewModel.loadProfile(this)
 
         // image setting
         val tempImg = File(
@@ -105,11 +113,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
-        myViewModel.userImage.observe(this, { it ->
-            imageView.setImageBitmap(it)
-        })
-
         if (tempImg.exists()) {
             val bitmap = Util.getBitmap(this, tempImgUri)
             imageView.setImageBitmap(bitmap)
@@ -124,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                 genderValue = selectedButton.tag.toString().toInt()
             }
 
-            val updatedProfile = profileData.copy(
+            val updatedProfile = Profile.ProfileData(
                 name = nameEditText.text.toString(),
                 email = emailEditText.text.toString(),
                 phone = phoneEditText.text.toString(),
@@ -132,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                 userClass = classEditText.text.toString().toIntOrNull() ?: 0,
                 major = majorEditText.text.toString()
             )
-            profileHelper.saveProfile(this, updatedProfile)
+            myViewModel.saveProfile(this, updatedProfile)
 
             Toast.makeText(this, savedProfile, Toast.LENGTH_LONG).show()
         }

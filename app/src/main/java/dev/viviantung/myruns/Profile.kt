@@ -14,8 +14,8 @@ class Profile {
         val major: String
     )
 
-    fun saveProfile(activity: Activity?, profileData: ProfileData){
-        val sharedPref = activity?.getSharedPreferences("ProfilePreferences",Context.MODE_PRIVATE)
+    fun saveProfile(context: Context?, profileData: ProfileData){
+        val sharedPref = context?.getSharedPreferences("ProfilePreferences",Context.MODE_PRIVATE)
         val editor = sharedPref?.edit()
         editor?.putString("user_name", profileData.name)
         editor?.putString("user_email", profileData.email)
@@ -28,8 +28,8 @@ class Profile {
     }
 
 
-    fun loadProfile(activity: Activity?): ProfileData  {
-        val sharedPrefs = activity?.getSharedPreferences("ProfilePreferences", Context.MODE_PRIVATE)
+    fun loadProfile(context: Context?): ProfileData  {
+        val sharedPrefs = context?.getSharedPreferences("ProfilePreferences", Context.MODE_PRIVATE)
         return ProfileData(
             sharedPrefs?.getString("user_name", "") ?: "",
             sharedPrefs?.getString("user_email", "") ?: "",
