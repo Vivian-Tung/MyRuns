@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MyRuns</string>
-    <!--    Settings strings-->
+    <!--    Profile strings-->
     <string name="profile_photo">Profile photo:</string>
     <string name="photo_desc">Capybara in a hat</string>
     <string name="change">Change</string>
@@ -20,4 +20,20 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="settings">Settings</string>
+    <!--    Settings strings-->
+    <string name="account_prefs">Account Preferences</string>
+    <string name="user_profile">User Profile</string>
+    <string name="list_settings">Name, Email, Class, etc</string>
+    <string name="privacy_setting">Privacy setting</string>
+    <string name="post_records">"Posting your records anonymously</string>
+    <string name="additional_settings">Additional settings</string>
+    <string name="unit_pref">Unit Preference</string>
+    <string name="unit_pref_detail">Select the units in which you would like to see distance values</string>
+    <string name="comment">Comment</string>
+    <string name="suggestion">Any suggestion to this course?</string>
+    <string name="misc">Misc</string>
+    <string name="class_page">Class homepage</string>
+
+
+
 </resources>

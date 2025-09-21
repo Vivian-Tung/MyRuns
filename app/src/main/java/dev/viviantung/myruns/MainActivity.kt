@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
 
         viewPager2 = findViewById(R.id.viewpager)
