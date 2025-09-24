@@ -1,16 +1,17 @@
 package dev.viviantung.myruns
 
-import android.os.Bundle
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.widget.Button
-import android.widget.RadioGroup
-import android.widget.RadioButton
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import java.io.File
 
 class SettingsActivity : AppCompatActivity() {
+    private val TAG: String = "debug:"
     private lateinit var imageView: ImageView
     private lateinit var changeButton: Button
     private lateinit var saveButton: Button
@@ -43,6 +45,10 @@ class SettingsActivity : AppCompatActivity() {
     val savedProfile = "Your profile data is saved!"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_profile)
+        val toolbar = findViewById<Toolbar>(R.id.tool_bar)
+        setSupportActionBar(toolbar)
 
         // Initialize views
         imageView = findViewById(R.id.imageProfile)
@@ -138,5 +144,11 @@ class SettingsActivity : AppCompatActivity() {
         cancelButton.setOnClickListener() {
             finish();
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
     }
 }
