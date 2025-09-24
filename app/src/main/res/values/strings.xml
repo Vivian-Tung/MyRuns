@@ -34,6 +34,19 @@
     <string name="misc">Misc</string>
     <string name="class_page">Class homepage</string>
 
-
+    <!-- Start Tab strings -->
+    <string name="input_type">Input Type:</string>
+    <string name="activity_type">Activity Type:</string>
+    <string-array name="input_array">
+        <item>Manual</item>
+        <item>GPS</item>
+        <item>Automatic</item>
+    </string-array>
+    <string-array name="activity_array">
+        <item>Running</item>
+        <item>Ultimate Frisbee</item>
+        <item>Pickleball</item>
+    </string-array>
+    <string name="start">Start</string>
 
 </resources>

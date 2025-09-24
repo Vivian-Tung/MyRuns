@@ -15,6 +15,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
 import java.util.ArrayList
 import androidx.appcompat.widget.Toolbar
+import android.widget.Spinner
+import android.widget.ArrayAdapter
+import android.widget.AdapterView
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var fragmentStart: FragmentStart
@@ -58,6 +62,13 @@ class MainActivity : AppCompatActivity() {
         tabLayoutMediator.attach()
         }
 
+        // start tab ============================================================================================
+        val inputTypes = resources.getStringArray(R.array.input_array)
+        val inputSpinner = findViewById<Spinner>(R.id.input_spinner)
+
+
+
+        // settings tab ============================================================================================
         // when the user profile is clicked, we want to launch a new activity
         fun onClick(view: View) {
             val intent: Intent = Intent(this, SettingsActivity::class.java)
