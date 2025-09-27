@@ -6,11 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -39,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var genderRadioGroup: RadioGroup
     private lateinit var classEditText: EditText
     private lateinit var majorEditText: EditText
-
+    private var TAG = "dialog tag"
     val savedProfile = "Your profile data is saved!"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,10 +100,34 @@ class SettingsActivity : AppCompatActivity() {
         )
 
         Util.checkPermissions(this)
+        // need to check permissions for access to media
         changeButton.setOnClickListener() {
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, tempImgUri)
-            cameraResult.launch(intent)
+            // need to call up dialog first
+            val dialog = BaseDialog { option ->
+                when(option) {
+                    BaseDialog.CAMERA_OPTION -> {
+                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempImgUri)
+                        cameraResult.launch(intent)
+                    }
+                    BaseDialog.GALLERY_OPTION -> {
+                        Toast.makeText(this, "gallery clicked", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            val args = Bundle()
+            args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.GALLERY_DIALOG)
+            dialog.arguments = args
+            dialog.show(supportFragmentManager, TAG)
+
+
+
+
+
+
+            // if choose camera then use the following code
+
+
         }
 
         cameraResult = registerForActivityResult(StartActivityForResult())
