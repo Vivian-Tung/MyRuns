@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="@string/account_prefs"
-            android:textColor="@color/purple_700"
+            android:textColor="?colorPrimary"
             android:paddingBottom="15dp"/>
 
         <LinearLayout
@@ -31,8 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="@string/user_profile"
-                android:textColor="@color/black" />
+                android:text="@string/user_profile"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -59,7 +58,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/privacy_setting"
-                android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -94,21 +92,23 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="@string/additional_settings"
-            android:textColor="@color/purple_700"
+            android:textColor="?colorPrimary"
             android:paddingBottom="15dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:onClick="onUnitPreferenceClick"
+            android:clickable="true"
+            android:focusable="true">
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="@string/unit_pref"
-            android:textColor="@color/black"/>
+            android:text="@string/unit_pref"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -128,14 +128,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:onClick="onCommentClick"
+            android:clickable="true"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="@string/comment"
-                android:textColor="@color/black"/>
+                android:text="@string/comment"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -155,7 +157,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="@string/misc"
-            android:textColor="@color/purple_700"
+            android:textColor="?colorPrimary"
             android:paddingBottom="15dp"/>
 
         <LinearLayout
@@ -170,8 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="@string/class_page"
-                android:textColor="@color/black"/>
+                android:text="@string/class_page"/>
 
             <TextView
                 android:layout_width="match_parent"

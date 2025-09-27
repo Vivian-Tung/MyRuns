@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
     private var url = "https://www.sfu.ca/fas/computing.html"
+    private var TAG = "dialog tag"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,6 +78,27 @@ class MainActivity : AppCompatActivity() {
         fun onProfileClick(view: View) {
             val intent: Intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
+        }
+
+        // when user clicks on unit preferences, open up dialog with 2 radio buttons
+        fun onUnitPreferenceClick(view: View) {
+            val dialog = BaseDialog()
+            val args = Bundle()
+            args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.UNIT_PREFERENCE_DIALOG)
+            dialog.arguments = args
+            dialog.show(supportFragmentManager, TAG)
+            // TODO: what do i do with the comments? do i have to save them to shared prefs?
+        }
+
+
+        // when user clicks on comments, open up dialog with text input
+        fun onCommentClick(view: View) {
+            val dialog = BaseDialog()
+            val args = Bundle()
+            args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.COMMENT_DIALOG)
+            dialog.arguments = args
+            dialog.show(supportFragmentManager, TAG)
+            // TODO: what do i do with the comments? do i have to save them to shared prefs?
         }
 
         // when user clicks on homepage, open in chrome
