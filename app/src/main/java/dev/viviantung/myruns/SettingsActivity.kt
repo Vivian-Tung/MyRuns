@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.widget.Button
 import android.widget.EditText
@@ -23,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import java.io.File
 
 class SettingsActivity : AppCompatActivity() {
-    private val TAG: String = "debug:"
     private lateinit var imageView: ImageView
     private lateinit var changeButton: Button
     private lateinit var saveButton: Button
@@ -114,11 +112,6 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        if (tempImg.exists()) {
-            val bitmap = Util.getBitmap(this, tempImgUri)
-            imageView.setImageBitmap(bitmap)
-        }
-
         // save profile
         saveButton.setOnClickListener() {
             var genderValue = -1
@@ -137,6 +130,12 @@ class SettingsActivity : AppCompatActivity() {
                 major = majorEditText.text.toString()
             )
             myViewModel.saveProfile(this, updatedProfile)
+
+            // save image only if save is clicked
+            if (tempImg.exists()) {
+                val bitmap = Util.getBitmap(this, tempImgUri)
+                imageView.setImageBitmap(bitmap)
+            }
 
             Toast.makeText(this, savedProfile, Toast.LENGTH_LONG).show()
         }

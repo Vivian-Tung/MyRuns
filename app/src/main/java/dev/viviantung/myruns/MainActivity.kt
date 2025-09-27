@@ -1,6 +1,7 @@
 package dev.viviantung.myruns
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tabConfigurationStrategy: TabConfigurationStrategy
     private lateinit var tabLayoutMediator: TabLayoutMediator
 
+    private var url = "https://www.sfu.ca/fas/computing.html"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,16 +66,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         // start tab ============================================================================================
-        val inputTypes = resources.getStringArray(R.array.input_array)
-        val inputSpinner = findViewById<Spinner>(R.id.input_spinner)
+//        val inputTypes = resources.getStringArray(R.array.input_array)
+//        val inputSpinner = findViewById<Spinner>(R.id.input_spinner)
 
 
 
         // settings tab ============================================================================================
+
         // when the user profile is clicked, we want to launch a new activity
-        fun onClick(view: View) {
+        fun onProfileClick(view: View) {
             val intent: Intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
+        }
+
+        // when user clicks on homepage, open in chrome
+        fun onUrlClick(view: View) {
+            val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(urlIntent)
         }
 
 

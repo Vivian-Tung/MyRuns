@@ -31,8 +31,9 @@
     <string name="unit_pref_detail">Select the units in which you would like to see distance values</string>
     <string name="comment">Comment</string>
     <string name="suggestion">Any suggestion to this course?</string>
-    <string name="misc">Misc</string>
+    <string name="misc">Misc.</string>
     <string name="class_page">Class homepage</string>
+    <string name="class_page_url">https://www.sfu.ca/fas/computing.html</string>
 
     <!-- Start Tab strings -->
     <string name="input_type">Input Type:</string>
