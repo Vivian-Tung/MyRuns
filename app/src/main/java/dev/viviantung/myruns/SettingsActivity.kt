@@ -2,6 +2,7 @@ package dev.viviantung.myruns
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import java.io.File
+import java.io.FileOutputStream
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
@@ -31,8 +33,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var tempImgUri: Uri
     private lateinit var myViewModel: MyViewModel
     private lateinit var cameraResult: ActivityResultLauncher<Intent>
-
     private val tempImgFileName = "temp_img.jpg"
+    private lateinit var pickImageResult: ActivityResultLauncher<Intent>
+    private var tempBitmap: Bitmap? = null // preview before save
+    private var savedBitmap: Bitmap? = null // last saved image
 
     // var for inputs
     private lateinit var nameEditText: EditText
@@ -111,6 +115,8 @@ class SettingsActivity : AppCompatActivity() {
                         cameraResult.launch(intent)
                     }
                     BaseDialog.GALLERY_OPTION -> {
+                        val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+                        pickImageResult.launch(intent)
                         Toast.makeText(this, "gallery clicked", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -119,23 +125,39 @@ class SettingsActivity : AppCompatActivity() {
             args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.GALLERY_DIALOG)
             dialog.arguments = args
             dialog.show(supportFragmentManager, TAG)
-
-
-
-
-
-
-            // if choose camera then use the following code
-
-
         }
 
         cameraResult = registerForActivityResult(StartActivityForResult())
         { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val bitmap = Util.getBitmap(this, tempImgUri)
+                tempBitmap = bitmap
                 myViewModel.userImage.value = bitmap
             }
+        }
+
+        pickImageResult = registerForActivityResult(StartActivityForResult())
+        { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val uri = result.data?.data
+                uri?.let {
+                    val bitmap = Util.getBitmap(this, it)
+                    tempBitmap = bitmap
+                    myViewModel.userImage.value = bitmap
+
+                    // save image in storage
+                    FileOutputStream(tempImg).use { out ->
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                    }
+                    tempImgUri = FileProvider.getUriForFile(
+                        this, "dev.viviantung.myruns", tempImg
+                    )
+                }
+            }
+        }
+        if (tempImg.exists()) {
+            val bitmap = Util.getBitmap(this, tempImgUri)
+            imageView.setImageBitmap(bitmap)
         }
 
         // save profile
@@ -158,10 +180,13 @@ class SettingsActivity : AppCompatActivity() {
             myViewModel.saveProfile(this, updatedProfile)
 
             // save image only if save is clicked
-            if (tempImg.exists()) {
-                val bitmap = Util.getBitmap(this, tempImgUri)
-                imageView.setImageBitmap(bitmap)
+            tempBitmap?.let { bitmap ->
+                FileOutputStream(tempImg).use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                }
+                savedBitmap = bitmap
             }
+
 
             Toast.makeText(this, savedProfile, Toast.LENGTH_LONG).show()
         }

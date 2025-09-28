@@ -51,15 +51,15 @@ class BaseDialog(
             val view = requireActivity().layoutInflater.inflate(R.layout.dialog_gallery, null)
 
             // init views
-            val cameraTextView = view.findViewById<TextView>(R.id.camera)
-            val galleryTextView = view.findViewById<TextView>(R.id.gallery)
+            val cameraView = view.findViewById<View>(R.id.camera)
+            val galleryView = view.findViewById<View>(R.id.gallery)
 
-            cameraTextView.setOnClickListener {
+            cameraView.setOnClickListener {
                 onOptionSelected?.invoke(CAMERA_OPTION)
                 dismiss()
             }
 
-            galleryTextView.setOnClickListener {
+            galleryView.setOnClickListener {
                 onOptionSelected?.invoke(GALLERY_OPTION)
                 dismiss()
             }

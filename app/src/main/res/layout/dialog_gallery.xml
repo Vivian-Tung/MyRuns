@@ -5,16 +5,21 @@
     android:layout_height="match_parent"
     android:padding="5sp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/camera"
-        android:textSize="17sp"
-        android:padding="5sp"
         android:id="@+id/camera"
         android:clickable="true"
         android:focusable="true">
-    </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/camera"
+            android:textSize="17sp"
+            android:padding="5sp">
+        </TextView>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -22,15 +27,19 @@
         android:layout_marginVertical="7dp"
         android:background="@android:color/darker_gray"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/gallery"
-        android:textSize="17sp"
-        android:padding="5sp"
         android:id="@+id/gallery"
         android:clickable="true"
         android:focusable="true">
-    </TextView>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gallery"
+            android:textSize="17sp"
+            android:padding="5sp">
+        </TextView>
+    </LinearLayout>
 </LinearLayout>
