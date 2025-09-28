@@ -7,8 +7,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/input_type" />
+        android:textSize="17sp"
+        android:text="@string/input_type"
+        android:paddingBottom="5sp"/>
 
     <Spinner
         android:id="@+id/input_spinner"
@@ -19,8 +20,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/activity_type" />
+        android:textSize="17sp"
+        android:text="@string/activity_type"
+        android:paddingBottom="5sp"/>
 
     <Spinner
         android:id="@+id/activity_spinner"

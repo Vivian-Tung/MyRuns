@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar
 import android.widget.Spinner
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     private var url = "https://www.sfu.ca/fas/computing.html"
     private var TAG = "dialog tag"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,48 +64,47 @@ class MainActivity : AppCompatActivity() {
             tab.text = tabTitles[position] }
         tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager2, tabConfigurationStrategy)
         tabLayoutMediator.attach()
-        }
+
 
         // start tab ============================================================================================
-//        val inputTypes = resources.getStringArray(R.array.input_array)
-//        val inputSpinner = findViewById<Spinner>(R.id.input_spinner)
+    }
 
 
 
-        // settings tab ============================================================================================
+    // settings tab ============================================================================================
 
-        // when the user profile is clicked, we want to launch a new activity
-        fun onProfileClick(view: View) {
-            val intent: Intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
+    // when the user profile is clicked, we want to launch a new activity
+    fun onProfileClick(view: View) {
+        val intent: Intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
 
-        // when user clicks on unit preferences, open up dialog with 2 radio buttons
-        fun onUnitPreferenceClick(view: View) {
-            val dialog = BaseDialog()
-            val args = Bundle()
-            args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.UNIT_PREFERENCE_DIALOG)
-            dialog.arguments = args
-            dialog.show(supportFragmentManager, TAG)
-            // TODO: what do i do with the comments? do i have to save them to shared prefs?
-        }
+    // when user clicks on unit preferences, open up dialog with 2 radio buttons
+    fun onUnitPreferenceClick(view: View) {
+        val dialog = BaseDialog()
+        val args = Bundle()
+        args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.UNIT_PREFERENCE_DIALOG)
+        dialog.arguments = args
+        dialog.show(supportFragmentManager, TAG)
+        // TODO: what do i do with the comments? do i have to save them to shared prefs?
+    }
 
 
-        // when user clicks on comments, open up dialog with text input
-        fun onCommentClick(view: View) {
-            val dialog = BaseDialog()
-            val args = Bundle()
-            args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.COMMENT_DIALOG)
-            dialog.arguments = args
-            dialog.show(supportFragmentManager, TAG)
-            // TODO: what do i do with the comments? do i have to save them to shared prefs?
-        }
+    // when user clicks on comments, open up dialog with text input
+    fun onCommentClick(view: View) {
+        val dialog = BaseDialog()
+        val args = Bundle()
+        args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.COMMENT_DIALOG)
+        dialog.arguments = args
+        dialog.show(supportFragmentManager, TAG)
+        // TODO: what do i do with the comments? do i have to save them to shared prefs?
+    }
 
-        // when user clicks on homepage, open in chrome
-        fun onUrlClick(view: View) {
-            val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(urlIntent)
-        }
+    // when user clicks on homepage, open in chrome
+    fun onUrlClick(view: View) {
+        val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(urlIntent)
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

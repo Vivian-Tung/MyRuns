@@ -48,9 +48,17 @@
         <item>Automatic</item>
     </string-array>
     <string-array name="activity_array">
-        <item>Running</item>
+        <item>Run</item>
         <item>Ultimate Frisbee</item>
         <item>Pickleball</item>
+        <item>Swim</item>
+        <item>Strength</item>
+        <item>Bike</item>
+        <item>Badminton</item>
+        <item>Basketball</item>
+        <item>Volleyball</item>
+        <item>Golf</item>
+        <item>Standup Paddleboard</item>
     </string-array>
     <string name="start">Start</string>
 
