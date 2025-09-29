@@ -55,9 +55,11 @@ class FragmentStart : Fragment() {
                 intent.putExtra("EXTRA_ACTIVITY_TYPE", selectedActivity)
                 startActivity(intent)
             } else if (selectedInput == "GPS") {
-                 Toast.makeText(requireContext(), "launch gps xml", Toast.LENGTH_SHORT).show()
+                val intent: Intent = Intent(getActivity(), MapActivity::class.java)
+                startActivity(intent)
             } else if (selectedInput == "Automatic") {
-                 Toast.makeText(requireContext(), "launch auto xml", Toast.LENGTH_SHORT).show()
+                val intent: Intent = Intent(getActivity(), MapActivity::class.java)
+                startActivity(intent)
             }
         }
     }
