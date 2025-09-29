@@ -7,8 +7,6 @@ import android.content.DialogInterface
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import android.widget.TextView
-
 
 
 class BaseDialog(
@@ -20,6 +18,11 @@ class BaseDialog(
         const val UNIT_PREFERENCE_DIALOG = 1
         const val COMMENT_DIALOG = 2
         const val GALLERY_DIALOG = 3
+        const val DURATION_DIALOG = 4
+        const val DISTANCE_DIALOG = 5
+        const val CALORIES_DIALOG = 6
+        const val HR_DIALOG = 7
+
 
         const val CAMERA_OPTION = 1
         const val GALLERY_OPTION = 2
@@ -68,15 +71,53 @@ class BaseDialog(
             builder.setTitle("Select profile image")
             dialog = builder.create()
 
-        }
+        } else if(dialogId == DURATION_DIALOG) {
+            var builder = AlertDialog.Builder(requireActivity())
+            val view = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
 
+            builder.setView(view)
+            builder.setTitle("Duration")
+            builder.setPositiveButton("Ok", this)
+            builder.setNegativeButton("Cancel", this)
+            dialog = builder.create()
+        }
+        else if(dialogId == DISTANCE_DIALOG) {
+            var builder = AlertDialog.Builder(requireActivity())
+            val view = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+
+            builder.setView(view)
+            builder.setTitle("Distance")
+            builder.setPositiveButton("Ok", this)
+            builder.setNegativeButton("Cancel", this)
+            dialog = builder.create()
+        }
+        else if(dialogId == CALORIES_DIALOG) {
+            var builder = AlertDialog.Builder(requireActivity())
+            val view = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+
+            builder.setView(view)
+            builder.setTitle("Calories")
+            builder.setPositiveButton("Ok", this)
+            builder.setNegativeButton("Cancel", this)
+            dialog = builder.create()
+        }
+        else if(dialogId == HR_DIALOG) {
+            var builder = AlertDialog.Builder(requireActivity())
+            val view = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+
+            builder.setView(view)
+            builder.setTitle("Heart rate")
+            builder.setPositiveButton("Ok", this)
+            builder.setNegativeButton("Cancel", this)
+            dialog = builder.create()
+        }
         return dialog
     }
 
     override fun onClick(dialog: DialogInterface?, item: Int) {
         if(item == DialogInterface.BUTTON_POSITIVE)
-            Toast.makeText(requireActivity(), "ok clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), "Changes saved", Toast.LENGTH_SHORT).show()
         else if(item == DialogInterface.BUTTON_NEGATIVE)
-            Toast.makeText(requireActivity(), "cancel clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), "Changes discarded", Toast.LENGTH_SHORT).show()
     }
 }

@@ -1,16 +1,19 @@
 package dev.viviantung.myruns
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.widget.Spinner
 
 class FragmentStart : Fragment() {
+    private lateinit var startButton: Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_start, container, false)
@@ -18,6 +21,7 @@ class FragmentStart : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        startButton = view.findViewById(R.id.btnStart)
 
         val inputSpinner = view.findViewById<Spinner>(R.id.input_spinner)
         val input = resources.getStringArray(R.array.input_array)
@@ -30,24 +34,6 @@ class FragmentStart : Fragment() {
         inputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         inputSpinner.adapter = inputAdapter
 
-        inputSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                Toast.makeText(
-                    requireContext(),
-                    "${getString(R.string.input_type)} ${input[position]}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // nothing needed here
-            }
-        }
 
         val activitySpinner = view.findViewById<Spinner>(R.id.activity_spinner)
         val activities = resources.getStringArray(R.array.activity_array)
@@ -60,22 +46,18 @@ class FragmentStart : Fragment() {
         activityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         activitySpinner.adapter = activityAdapter
 
-        activitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                Toast.makeText(
-                    requireContext(),
-                    "${getString(R.string.activity_type)} ${activities[position]}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        startButton.setOnClickListener() {
+            val selectedInput = inputSpinner.selectedItem.toString()
+            val selectedActivity = activitySpinner.selectedItem.toString()
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // nothing needed here
+            if (selectedInput == "Manual" && selectedActivity.isNotEmpty()) {
+                val intent: Intent = Intent(getActivity(), ManualActivity::class.java)
+                intent.putExtra("EXTRA_ACTIVITY_TYPE", selectedActivity)
+                startActivity(intent)
+            } else if (selectedInput == "GPS") {
+                 Toast.makeText(requireContext(), "launch gps xml", Toast.LENGTH_SHORT).show()
+            } else if (selectedInput == "Automatic") {
+                 Toast.makeText(requireContext(), "launch auto xml", Toast.LENGTH_SHORT).show()
             }
         }
     }

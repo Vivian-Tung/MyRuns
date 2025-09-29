@@ -187,8 +187,8 @@ class SettingsActivity : AppCompatActivity() {
                 savedBitmap = bitmap
             }
 
-
-            Toast.makeText(this, savedProfile, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, savedProfile, Toast.LENGTH_SHORT).show()
+            finish();
         }
 
         cancelButton.setOnClickListener() {

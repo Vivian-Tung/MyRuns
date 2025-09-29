@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity"/>
+        <activity android:name=".ManualActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
