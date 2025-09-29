@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:text="@string/account_prefs"
             android:textColor="?colorPrimary"
             android:paddingBottom="15dp"/>
@@ -30,7 +30,7 @@
                 android:id="@+id/user_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:text="@string/user_profile"/>
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/privacy_setting"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/privacy_cb"/>
@@ -90,7 +90,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:text="@string/additional_settings"
             android:textColor="?colorPrimary"
             android:paddingBottom="15dp"/>
@@ -107,7 +107,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="17sp"
             android:text="@string/unit_pref"/>
 
         <TextView
@@ -136,7 +136,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:text="@string/comment"/>
 
             <TextView
@@ -171,7 +171,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:text="@string/class_page"/>
 
             <TextView
