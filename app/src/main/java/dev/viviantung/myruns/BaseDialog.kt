@@ -3,8 +3,12 @@ package dev.viviantung.myruns
 import androidx.fragment.app.DialogFragment
 import android.os.Bundle
 import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.view.View
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 
@@ -35,6 +39,26 @@ class BaseDialog(
             var builder = AlertDialog.Builder(requireActivity())
             val view = requireActivity().layoutInflater.inflate(R.layout.dialog_unit_preferences, null)
 
+            val prefs = requireContext().getSharedPreferences("ProfilePreferences", Context.MODE_PRIVATE)
+            val savedUnit = prefs.getString("unit_preference", "") // no default
+
+            if (savedUnit == getString(R.string.metric)) {
+                view.findViewById<RadioButton>(R.id.radioMetric).isChecked = true
+            } else if (savedUnit == getString(R.string.imperial)) {
+                view.findViewById<RadioButton>(R.id.radioImperial).isChecked = true
+            }
+
+            val unitRadioGroup =  view.findViewById<RadioGroup>(R.id.unitRadioGroup)
+            unitRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+                if (checkedId != -1) { // -1 means nothing selected
+                    val selected = view.findViewById<RadioButton>(checkedId).text.toString()
+                    val prefs = requireActivity().getSharedPreferences("ProfilePreferences", Context.MODE_PRIVATE)
+                    prefs.edit()
+                        .putString("unit_preference", selected)
+                        .apply()
+                }
+            }
+
             builder.setView(view)
             builder.setTitle("Select which unit to use")
             builder.setNegativeButton("Cancel", this)
@@ -44,10 +68,22 @@ class BaseDialog(
             var builder = AlertDialog.Builder(requireActivity())
             val view = requireActivity().layoutInflater.inflate(R.layout.dialog_comment, null)
 
+            val commentEditText = view.findViewById<EditText>(R.id.comment)
+            val prefs = requireContext().getSharedPreferences("ProfilePreferences", Context.MODE_PRIVATE)
+            val savedComment = prefs.getString("comments", "") ?: ""// no default
+            commentEditText.setText(savedComment)
+
             builder.setView(view)
             builder.setTitle("Comment")
-            builder.setPositiveButton("Ok", this)
-            builder.setNegativeButton("Cancel", this)
+            builder.setPositiveButton("Ok") { _, _ ->
+                val comment = commentEditText.text.toString()
+                prefs.edit()
+                    .putString("comments", comment)
+                    .apply()
+            }
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Do nothing (no save)
+            }
             dialog = builder.create()
         } else if(dialogId == GALLERY_DIALOG) {
             var builder = AlertDialog.Builder(requireActivity())
@@ -116,8 +152,8 @@ class BaseDialog(
 
     override fun onClick(dialog: DialogInterface?, item: Int) {
         if(item == DialogInterface.BUTTON_POSITIVE)
-            Toast.makeText(requireActivity(), "Changes saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), "Ok clicked", Toast.LENGTH_SHORT).show()
         else if(item == DialogInterface.BUTTON_NEGATIVE)
-            Toast.makeText(requireActivity(), "Changes discarded", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), "Cancel clicked", Toast.LENGTH_SHORT).show()
     }
 }
