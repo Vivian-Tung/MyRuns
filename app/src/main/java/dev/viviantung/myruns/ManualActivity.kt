@@ -56,6 +56,10 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
             }
         }
 
+        saveButton.setOnClickListener() {
+            finish();
+        }
+
         cancelButton.setOnClickListener() {
             finish();
         }

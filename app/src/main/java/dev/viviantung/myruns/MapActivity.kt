@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
 class MapActivity: AppCompatActivity() {
+    private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +17,12 @@ class MapActivity: AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Map"
 
+        saveButton = findViewById(R.id.btnSave)
         cancelButton = findViewById(R.id.btnCancel)
+
+        saveButton.setOnClickListener() {
+            finish();
+        }
 
         cancelButton.setOnClickListener() {
             finish();

@@ -56,6 +56,7 @@ class BaseDialog(
                     prefs.edit()
                         .putString("unit_preference", selected)
                         .apply()
+                    dismiss()
                 }
             }
 
