@@ -13,8 +13,15 @@ import java.util.Calendar
 import android.widget.DatePicker
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.util.Log
 import android.view.View
 import android.widget.TimePicker
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
+import dev.viviantung.myruns.BaseDialog.Companion
+import dev.viviantung.myruns.BaseDialog.Companion.COMMENT_DIALOG
+import dev.viviantung.myruns.BaseDialog.Companion.DURATION_DIALOG
 
 
 class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -28,6 +35,12 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
     private var TAG = "dialog tag"
 
     val calendar = Calendar.getInstance()
+
+    private lateinit var database: ExerciseDatabase
+    private lateinit var databaseDao: ExerciseDatabaseDao
+    private lateinit var repository: ExerciseRepository
+    private lateinit var viewModelFactory: ExerciseViewModelFactory
+    private lateinit var exerciseViewModel: ExerciseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +69,24 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
             }
         }
 
+        // set up the database stuff
+        database = ExerciseDatabase.getInstance(this)
+        databaseDao = database.exerciseDatabaseDao
+        repository = ExerciseRepository(databaseDao)
+        viewModelFactory = ExerciseViewModelFactory(repository)
+        exerciseViewModel = ViewModelProvider(this, viewModelFactory).get(ExerciseViewModel::class.java)
+
+        // leave this for now since we arent rendering, i just want to test that its been inserted
+//        exerciseViewModel.allExerciseLiveData.observe(this, Observer { it ->
+//            // need to set up a exercise entry array adapter to display (for later
+//
+//        })
+
         saveButton.setOnClickListener() {
+            // how do i collect all the data and insert it in?
+
+
+
             finish();
         }
 
@@ -67,12 +97,12 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val selectedDate = "$year-${month + 1}-$dayOfMonth"
-        Toast.makeText(this, "Selected: $selectedDate", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "Selected: $selectedDate", Toast.LENGTH_SHORT).show()
     }
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         val selectedTime = "$hourOfDay : $minute"
-        Toast.makeText(this, "Selected: $selectedTime", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "Selected: $selectedTime", Toast.LENGTH_SHORT).show()
     }
 
     fun onDurationClick() {
@@ -89,6 +119,8 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.DISTANCE_DIALOG)
         dialog.arguments = args
         dialog.show(supportFragmentManager, TAG)
+        onDialogInputReceived(BaseDialog.DISTANCE_DIALOG, args)
+
     }
     fun onCaloriesClick() {
         val dialog = BaseDialog()
@@ -96,6 +128,8 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.CALORIES_DIALOG)
         dialog.arguments = args
         dialog.show(supportFragmentManager, TAG)
+        onDialogInputReceived(BaseDialog.CALORIES_DIALOG, args)
+
     }
 
     fun onHRClick() {
@@ -112,6 +146,22 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.COMMENT_DIALOG)
         dialog.arguments = args
         dialog.show(supportFragmentManager, TAG)
+    }
+
+    fun onDialogInputReceived(dialogId: Int, data: Bundle) {
+        when (dialogId) {
+            DURATION_DIALOG -> {
+                val duration = data.getString("et_duration")
+                Toast.makeText(this, "Duration: $duration", Toast.LENGTH_SHORT).show()
+            }
+            COMMENT_DIALOG -> {
+                val comment = data.getString("comment")
+                Toast.makeText(this, "Comment: $comment", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                Log.d("DialogInput", "Received: $data")
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
