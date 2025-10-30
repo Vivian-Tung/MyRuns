@@ -22,9 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/input_edittext">
+        android:id="@+id/input_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
-
 
     <TextView
         android:layout_width="match_parent"
@@ -36,7 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/activity_edittext">
+        android:id="@+id/activity_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
 
     <TextView
@@ -49,7 +54,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/datetime_edittext">
+        android:id="@+id/datetime_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
 
     <TextView
@@ -62,7 +70,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/duration_edittext">
+        android:id="@+id/duration_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
 
     <TextView
@@ -75,7 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/distance_edittext">
+        android:id="@+id/distance_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
 
     <TextView
@@ -88,7 +102,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/cals_edittext">
+        android:id="@+id/cals_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
 
     <TextView
@@ -101,7 +118,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="placeholder"
-        android:id="@+id/hr_edittext">
+        android:id="@+id/hr_edittext"
+        android:clickable="true"
+        android:focusable="false"
+        android:inputType="none">
     </EditText>
 
 </LinearLayout>

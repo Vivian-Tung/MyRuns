@@ -53,6 +53,8 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
+        val deleteButton = toolbar.findViewById<Button>(R.id.btn_delete)
+        deleteButton.visibility = View.GONE
 
         // Initialize views
         imageView = findViewById(R.id.imageProfile)

@@ -3,9 +3,12 @@ package dev.viviantung.myruns
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.material3.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -27,6 +30,9 @@ class DisplayEntryActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
+
+        val deleteButton = toolbar.findViewById<Button>(R.id.btn_delete)
+        deleteButton.visibility = View.VISIBLE // only on detail screens
 
         exerciseId = intent.getLongExtra("exercise_id", 0L)
 
@@ -53,8 +59,6 @@ class DisplayEntryActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 }

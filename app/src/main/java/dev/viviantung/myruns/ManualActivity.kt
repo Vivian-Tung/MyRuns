@@ -77,6 +77,8 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         setContentView(R.layout.activity_manual)
         val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
+        val deleteButton = toolbar.findViewById<Button>(R.id.btn_delete)
+        deleteButton.visibility = View.GONE
 
         activityType = getIntent().getStringExtra("EXTRA_ACTIVITY_TYPE").toString()
         // TODO: need to use map to get convert to integer
@@ -219,8 +221,6 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 }

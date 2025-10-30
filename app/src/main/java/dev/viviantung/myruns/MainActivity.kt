@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar
 import android.widget.Spinner
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.Toast
 
 
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
+        val deleteButton = toolbar.findViewById<Button>(R.id.btn_delete)
+        deleteButton.visibility = View.GONE
 
         viewPager2 = findViewById(R.id.viewpager)
         tabLayout = findViewById(R.id.tab)
@@ -108,8 +111,6 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 }

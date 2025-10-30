@@ -2,6 +2,7 @@ package dev.viviantung.myruns
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,6 +17,8 @@ class MapActivity: AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Map"
+        val deleteButton = toolbar.findViewById<Button>(R.id.btn_delete)
+        deleteButton.visibility = View.GONE
 
         saveButton = findViewById(R.id.btnSave)
         cancelButton = findViewById(R.id.btnCancel)
@@ -31,8 +34,6 @@ class MapActivity: AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 }
