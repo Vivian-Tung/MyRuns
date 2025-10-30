@@ -1,6 +1,7 @@
 package dev.viviantung.myruns
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -27,9 +28,7 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
 
     // delete
     fun delete(id: Long) {
-        val exerciseList = allExerciseLiveData.value
-        // logical check
-        if (exerciseList != null && exerciseList.isNotEmpty()) {
+        viewModelScope.launch {
             repository.delete(id)
         }
     }

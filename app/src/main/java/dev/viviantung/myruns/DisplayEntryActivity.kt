@@ -1,6 +1,7 @@
 package dev.viviantung.myruns
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -8,7 +9,6 @@ import android.widget.EditText
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.compose.material3.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -42,18 +42,31 @@ class DisplayEntryActivity : AppCompatActivity() {
         val factory = ExerciseViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(ExerciseViewModel::class.java)
 
+        deleteButton.setOnClickListener {
+            Log.d("ExerciseDetail", "Delete button clicked for ID $exerciseId")
+            lifecycleScope.launch {
+                viewModel.delete(exerciseId)
+                Log.d("ExerciseDetail", "Delete called on ViewModel for ID $exerciseId")
+                finish()
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.getExerciseById(exerciseId).collect { exercise ->
-                // Populate UI fields
-                val inputTypeStr = INPUTTYPE.elementAt(exercise.inputType)
-                val activityTypeStr = ACTIVITYTYPE.elementAt(exercise.activityType)
-                findViewById<EditText>(R.id.input_edittext).setText(inputTypeStr) // might need map
-                findViewById<EditText>(R.id.activity_edittext).setText(activityTypeStr) // might need map
-                findViewById<EditText>(R.id.datetime_edittext).setText(exercise.dateTime.toString())
-                findViewById<EditText>(R.id.duration_edittext).setText(exercise.duration.toString())
-                findViewById<EditText>(R.id.distance_edittext).setText(exercise.distance.toString())
-                findViewById<EditText>(R.id.cals_edittext).setText(exercise.calorie.toString())
-                findViewById<EditText>(R.id.hr_edittext).setText(exercise.heartRate.toString())
+                if (exercise != null) {
+                    // Populate UI fields
+                    val inputTypeStr = INPUTTYPE.elementAt(exercise.inputType)
+                    val activityTypeStr = ACTIVITYTYPE.elementAt(exercise.activityType)
+                    findViewById<EditText>(R.id.input_edittext).setText(inputTypeStr) // might need map
+                    findViewById<EditText>(R.id.activity_edittext).setText(activityTypeStr) // might need map
+                    findViewById<EditText>(R.id.datetime_edittext).setText(exercise.dateTime.toString())
+                    findViewById<EditText>(R.id.duration_edittext).setText(exercise.duration.toString())
+                    findViewById<EditText>(R.id.distance_edittext).setText(exercise.distance.toString())
+                    findViewById<EditText>(R.id.cals_edittext).setText(exercise.calorie.toString())
+                    findViewById<EditText>(R.id.hr_edittext).setText(exercise.heartRate.toString())
+                } else {
+                    finish()
+                }
             }
         }
     }
