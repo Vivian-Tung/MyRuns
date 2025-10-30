@@ -22,7 +22,13 @@ class ExerciseRepository(private val exerciseDatabaseDao: ExerciseDatabaseDao) {
             exerciseDatabaseDao.insertExercise(exercise)
         }
     }
-    
+
+    // get specific entry
+    fun getExerciseById(id: Long): Flow<Exercise> {
+        return exerciseDatabaseDao.getExerciseById(id)
+    }
+
+    // delete specific entry
     fun delete(id: Long){
         CoroutineScope(IO).launch {
             exerciseDatabaseDao.deleteExercise(id)

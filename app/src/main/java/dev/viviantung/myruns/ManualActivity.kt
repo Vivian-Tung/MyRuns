@@ -201,7 +201,7 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
             HR_DIALOG -> heartRate = data.getDouble("heartRate")
             COMMENT_DIALOG -> comment = data.getString("comment").toString()
         }
-        Toast.makeText(this, "Updated variables: duration=$duration, distance=$distance, calories=$calories, hr=$heartRate, comment=$comment", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "Updated variables: duration=$duration, distance=$distance, calories=$calories, hr=$heartRate, comment=$comment", Toast.LENGTH_SHORT).show()
     }
 
     // helper function to combine date and time

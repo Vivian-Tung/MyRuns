@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -17,6 +18,11 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
     // insert
     fun insert(exercise: Exercise) {
         repository.insert(exercise)
+    }
+
+    // get specific entry
+    fun getExerciseById(id: Long): Flow<Exercise> {
+        return repository.getExerciseById(id)
     }
 
     // delete

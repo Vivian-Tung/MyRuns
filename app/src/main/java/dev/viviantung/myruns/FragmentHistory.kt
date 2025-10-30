@@ -1,13 +1,11 @@
 package dev.viviantung.myruns
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import androidx.fragment.app.Fragment
-import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.ViewModelProvider
@@ -33,7 +31,12 @@ class FragmentHistory: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.history_list)
-        adapter = ExerciseAdapter()
+        adapter = ExerciseAdapter {exercise ->
+            val intent = Intent(requireContext(), DisplayEntryActivity::class.java)
+            intent.putExtra("exercise_id", exercise.id)
+            startActivity(intent)
+        }
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

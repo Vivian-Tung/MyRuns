@@ -17,6 +17,10 @@ interface ExerciseDatabaseDao {
     @Query("SELECT * FROM exercise_table")
     fun getAllExercises(): Flow<List<Exercise>>
 
+    // get exercise by id so we can display this entry
+    @Query("SELECT * FROM exercise_table WHERE id =:key LIMIT 1")
+    fun getExerciseById(key: Long): Flow<Exercise>
+
     // delete from display entry tab, want to delete on a specific key or the unique id
     @Query("DELETE FROM exercise_table WHERE id = :key") //":" indicates that it is a Bind variable
     suspend fun deleteExercise(key: Long)

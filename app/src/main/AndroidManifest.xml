@@ -28,6 +28,7 @@
         <activity android:name=".SettingsActivity"/>
         <activity android:name=".ManualActivity"/>
         <activity android:name=".MapActivity"/>
+        <activity android:name=".DisplayEntryActivity"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -10,7 +10,9 @@ import dev.viviantung.myruns.DiffUtil.ExerciseDiffCallback
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ExerciseAdapter : ListAdapter<Exercise, ExerciseAdapter.ExerciseViewHolder>(
+class ExerciseAdapter(
+    private val onClick: (Exercise) -> Unit,      // called on item click
+) : ListAdapter<Exercise, ExerciseAdapter.ExerciseViewHolder>(
     ExerciseDiffCallback()
 ) {
 
@@ -22,12 +24,31 @@ class ExerciseAdapter : ListAdapter<Exercise, ExerciseAdapter.ExerciseViewHolder
     private val INPUTTYPE = arrayOf("Manual Entry", "GPS Entry", "Automatic Entry")
 
     inner class ExerciseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val inputTypeText: TextView = itemView.findViewById(R.id.textInputType)
-        val activityTypeText: TextView = itemView.findViewById(R.id.textActivityType)
-        val dateTimeText: TextView = itemView.findViewById(R.id.textDateTime)
-        val detailsText: TextView = itemView.findViewById(R.id.textDetails)
+        private val inputTypeText: TextView = itemView.findViewById(R.id.textInputType)
+        private val activityTypeText: TextView = itemView.findViewById(R.id.textActivityType)
+        private val dateTimeText: TextView = itemView.findViewById(R.id.textDateTime)
+        private val detailsText: TextView = itemView.findViewById(R.id.textDetails)
 
         // need to add units here somehow need to pass the data here and also change the view
+        fun bind(exercise: Exercise) {
+            // trying to convert int to string to render it
+            val activityTypeStr = ACTIVITYTYPE.elementAt(exercise.activityType)
+            val inputTypeStr = INPUTTYPE.elementAt(exercise.inputType)
+
+            inputTypeText.text = "${inputTypeStr}:"
+            activityTypeText.text = " ${activityTypeStr}"
+            dateTimeText.text = " ${
+                SimpleDateFormat(
+                    "HH:mm yyyy-MM-dd",
+                    Locale.getDefault()
+                ).format(exercise.dateTime)}"
+            detailsText.text = "Distance: ${exercise.distance} , Duration: ${exercise.duration}"
+
+            // Handle click for detail view
+            itemView.setOnClickListener {
+                onClick(exercise)
+            }
+        }
     }
 
     // inflate the entries
@@ -39,16 +60,6 @@ class ExerciseAdapter : ListAdapter<Exercise, ExerciseAdapter.ExerciseViewHolder
     // update ?
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
         val exercise = getItem(position)
-        // trying to convert int to string to render it
-        val activityTypeStr = ACTIVITYTYPE.elementAt(exercise.activityType)
-        val inputTypeStr = INPUTTYPE.elementAt(exercise.inputType)
-        holder.inputTypeText.text = "${inputTypeStr}:"
-        holder.activityTypeText.text = " ${activityTypeStr}"
-        holder.dateTimeText.text = " ${
-            SimpleDateFormat(
-                "HH:mm yyyy-MM-dd",
-                Locale.getDefault()
-            ).format(exercise.dateTime)}"
-        holder.detailsText.text = "Distance: ${exercise.distance} , Duration: ${exercise.duration}"
+        holder.bind(exercise)
     }
 }
