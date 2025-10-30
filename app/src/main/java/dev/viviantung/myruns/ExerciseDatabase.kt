@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 // to build the database
-@Database(entities = [Exercise::class], version = 1)
+@Database(entities = [Exercise::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class ExerciseDatabase : RoomDatabase() {
     abstract val exerciseDatabaseDao: ExerciseDatabaseDao
@@ -23,7 +23,9 @@ abstract class ExerciseDatabase : RoomDatabase() {
                 var instance = INSTANCE
                 if(instance == null) {
                     instance = Room.databaseBuilder(context.applicationContext,
-                        ExerciseDatabase::class.java, "exercise_table").build()
+                                        ExerciseDatabase::class.java, "exercise_table")
+                        .fallbackToDestructiveMigration(true) // just drop the tables if theres a new version
+                        .build()
                     INSTANCE = instance
                 }
                 return instance

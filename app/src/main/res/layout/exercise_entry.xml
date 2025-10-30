@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textInputType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Input Type: "/>
+
+        <TextView
+            android:id="@+id/textActivityType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text=" Activity Type, "/>
+
+        <TextView
+            android:id="@+id/textDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text=" DateTime"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Details"/>
+
+
+</LinearLayout>

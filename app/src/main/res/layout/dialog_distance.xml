@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
-        android:id="@+id/num_input">
+        android:id="@+id/distance_input">
     </EditText>
 
 </LinearLayout>

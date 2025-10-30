@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -27,6 +28,7 @@ class BaseDialog(
     private var dialogId: Int = -1
     private var listener: DialogInputListener? = null
 
+    lateinit var result: Bundle // collects all data and puts it in a bundle
     companion object{
         const val DIALOG_KEY = "DIALOG KEY"
         const val UNIT_PREFERENCE_DIALOG = 1
@@ -36,8 +38,6 @@ class BaseDialog(
         const val DISTANCE_DIALOG = 5
         const val CALORIES_DIALOG = 6
         const val HR_DIALOG = 7
-
-
         const val CAMERA_OPTION = 1
         const val GALLERY_OPTION = 2
     }
@@ -123,7 +123,7 @@ class BaseDialog(
 
         } else if(dialogId == DURATION_DIALOG) {
 //            var builder = AlertDialog.Builder(requireActivity())
-            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_duration, null)
 
             builder.setView(currentDialogView)
             builder.setTitle("Duration")
@@ -133,7 +133,7 @@ class BaseDialog(
         }
         else if(dialogId == DISTANCE_DIALOG) {
 //            var builder = AlertDialog.Builder(requireActivity())
-            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_distance, null)
 
             builder.setView(currentDialogView)
             builder.setTitle("Distance")
@@ -143,7 +143,7 @@ class BaseDialog(
         }
         else if(dialogId == CALORIES_DIALOG) {
 //            var builder = AlertDialog.Builder(requireActivity())
-            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_calories, null)
 
             builder.setView(currentDialogView)
             builder.setTitle("Calories")
@@ -153,7 +153,7 @@ class BaseDialog(
         }
         else if(dialogId == HR_DIALOG) {
 //            var builder = AlertDialog.Builder(requireActivity())
-            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_num_input, null)
+            currentDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_hr, null)
 
             builder.setView(currentDialogView)
             builder.setTitle("Heart rate")
@@ -169,7 +169,7 @@ class BaseDialog(
             // extract the input and pass it back to the caller
             val data = collectInputs(currentDialogView)
             listener?.onDialogInputReceived(dialogId, data)
-            Toast.makeText(requireActivity(), "$data", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), "Data sent: $data", Toast.LENGTH_SHORT).show()
         } else if (item == DialogInterface.BUTTON_NEGATIVE) {
             Toast.makeText(requireActivity(), "Cancel clicked", Toast.LENGTH_SHORT).show()
         }
@@ -188,38 +188,29 @@ class BaseDialog(
         val bundle = Bundle()
         if (view == null) return bundle
 
-        fun traverse(v: View) {
-            when (v) {
-                is EditText -> {
-                    // get the id and put the string into a text
-                    val key = v.resources.getResourceEntryName(v.id)
-                    bundle.putString(key, v.text.toString())
-                }
-                is CheckBox -> {
-                    // get id and put bool into the data
-                    val key = v.resources.getResourceEntryName(v.id)
-                    bundle.putBoolean(key, v.isChecked)
-                }
-                is RadioGroup -> {
-                    // see which button is checked then put it as data
-                    val checkedId = v.checkedRadioButtonId
-                    if (checkedId != -1) {
-                        val radioButton = v.findViewById<RadioButton>(checkedId)
-                        val key = v.resources.getResourceEntryName(v.id)
-                        bundle.putString(key, radioButton.text.toString())
-                    }
-                }
+        when (dialogId) {
+            DURATION_DIALOG -> {
+                val editText = view.findViewById<EditText>(R.id.duration_input)
+                bundle.putDouble("duration", editText.text.toString().toDoubleOrNull() ?: 0.0)
             }
-
-            // If this view is a ViewGroup (like LinearLayout, ConstraintLayout, etc.), go deeper
-            if (v is ViewGroup) {
-                for (i in 0 until v.childCount) {
-                    traverse(v.getChildAt(i))
-                }
+            DISTANCE_DIALOG -> {
+                val editText = view.findViewById<EditText>(R.id.distance_input)
+                bundle.putDouble("distance", editText.text.toString().toDoubleOrNull() ?: 0.0)
+            }
+            CALORIES_DIALOG -> {
+                val editText = view.findViewById<EditText>(R.id.calories_input)
+                bundle.putDouble("calories", editText.text.toString().toDoubleOrNull() ?: 0.0)
+            }
+            HR_DIALOG -> {
+                val editText = view.findViewById<EditText>(R.id.hr_input)
+                bundle.putDouble("heartRate", editText.text.toString().toDoubleOrNull() ?: 0.0)
+            }
+            COMMENT_DIALOG -> {
+                val editText = view.findViewById<EditText>(R.id.comment)
+                bundle.putString("comment", editText.text.toString())
             }
         }
 
-        traverse(view)
         return bundle
     }
 }

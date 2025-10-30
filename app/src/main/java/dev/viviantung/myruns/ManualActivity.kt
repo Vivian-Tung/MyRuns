@@ -13,6 +13,8 @@ import java.util.Calendar
 import android.widget.DatePicker
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.text.TextUtils.indexOf
 import android.util.Log
 import android.view.View
 import android.widget.TimePicker
@@ -20,13 +22,22 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import dev.viviantung.myruns.BaseDialog.Companion
+import dev.viviantung.myruns.BaseDialog.Companion.CALORIES_DIALOG
 import dev.viviantung.myruns.BaseDialog.Companion.COMMENT_DIALOG
+import dev.viviantung.myruns.BaseDialog.Companion.DISTANCE_DIALOG
 import dev.viviantung.myruns.BaseDialog.Companion.DURATION_DIALOG
+import dev.viviantung.myruns.BaseDialog.Companion.HR_DIALOG
+import java.util.Date
 
 
-class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, DialogInputListener {
     private val ENTRY = arrayOf(
         "Date", "Time", "Duration", "Distance", "Calories", "Heart Rate", "Comment"
+    )
+
+    // mapping between index and activity type
+    private val ACTIVITYTYPE = arrayOf(
+        "Run", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard"
     )
 
     private lateinit var myListView: ListView
@@ -42,11 +53,35 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
     private lateinit var viewModelFactory: ExerciseViewModelFactory
     private lateinit var exerciseViewModel: ExerciseViewModel
 
+    // date time variables
+    private var selectedYear: Int = 0
+    private var selectedMonth: Int = 0
+    private var selectedDay: Int = 0
+    private var selectedHour: Int = 0
+    private var selectedMinute: Int = 0
+
+    // var for exercise input
+    private lateinit var activityType: String // need to create a map from activity to ints
+    private var inputType: Int = 0 // 0 for manual, 1 for GPS, 2 for auto
+    private lateinit var selectedDateTime: Date
+    private var duration: Double = 0.0
+    private var distance: Double = 0.0
+    private var pace: Double = 0.0
+    private var speed: Double = 0.0
+    private var calories: Double = 0.0
+    private var heartRate: Double = 0.0
+    private var comment: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual)
         val toolbar = findViewById<Toolbar>(R.id.tool_bar)
         setSupportActionBar(toolbar)
+
+        activityType = getIntent().getStringExtra("EXTRA_ACTIVITY_TYPE").toString()
+        // TODO: need to use map to get convert to integer
+        val activityTypeInt = ACTIVITYTYPE.indexOf(activityType)
+        Log.d("activity_type", "activity type int: $activityTypeInt")
 
         myListView = findViewById(R.id.manual_entry)
         saveButton = findViewById(R.id.btnSave)
@@ -76,17 +111,30 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         viewModelFactory = ExerciseViewModelFactory(repository)
         exerciseViewModel = ViewModelProvider(this, viewModelFactory).get(ExerciseViewModel::class.java)
 
-        // leave this for now since we arent rendering, i just want to test that its been inserted
-//        exerciseViewModel.allExerciseLiveData.observe(this, Observer { it ->
-//            // need to set up a exercise entry array adapter to display (for later
-//
-//        })
+        exerciseViewModel.allExerciseLiveData.observe(this) { list ->
+            Log.d("ExerciseList", "Current entries: $list")
+        }
 
         saveButton.setOnClickListener() {
-            // how do i collect all the data and insert it in?
+            selectedDateTime = getCombinedDateTime(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute)
+            pace = if (distance > 0) duration / distance else 0.0
+            speed = if (duration > 0) distance / duration else 0.0
 
-
-
+            val newExercise = Exercise(
+                inputType = inputType,
+                activityType = activityTypeInt,
+                dateTime = selectedDateTime,
+                duration = duration,
+                distance = distance,
+                avgPace = pace,
+                avgSpeed = speed,
+                calorie = calories,
+                heartRate = heartRate,
+                comment = comment,
+                location = ""
+            )
+            exerciseViewModel.insert(newExercise)
+            Toast.makeText(this, "Exercise saved!", Toast.LENGTH_SHORT).show()
             finish();
         }
 
@@ -96,13 +144,14 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val selectedDate = "$year-${month + 1}-$dayOfMonth"
-        // Toast.makeText(this, "Selected: $selectedDate", Toast.LENGTH_SHORT).show()
+        selectedYear = year
+        selectedMonth = month
+        selectedDay = dayOfMonth
     }
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        val selectedTime = "$hourOfDay : $minute"
-        // Toast.makeText(this, "Selected: $selectedTime", Toast.LENGTH_SHORT).show()
+        selectedHour = hourOfDay
+        selectedMinute = minute
     }
 
     fun onDurationClick() {
@@ -119,8 +168,6 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.DISTANCE_DIALOG)
         dialog.arguments = args
         dialog.show(supportFragmentManager, TAG)
-        onDialogInputReceived(BaseDialog.DISTANCE_DIALOG, args)
-
     }
     fun onCaloriesClick() {
         val dialog = BaseDialog()
@@ -128,8 +175,6 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         args.putInt(BaseDialog.DIALOG_KEY, BaseDialog.CALORIES_DIALOG)
         dialog.arguments = args
         dialog.show(supportFragmentManager, TAG)
-        onDialogInputReceived(BaseDialog.CALORIES_DIALOG, args)
-
     }
 
     fun onHRClick() {
@@ -148,20 +193,29 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
         dialog.show(supportFragmentManager, TAG)
     }
 
-    fun onDialogInputReceived(dialogId: Int, data: Bundle) {
+    override fun onDialogInputReceived(dialogId: Int, data: Bundle) {
         when (dialogId) {
-            DURATION_DIALOG -> {
-                val duration = data.getString("et_duration")
-                Toast.makeText(this, "Duration: $duration", Toast.LENGTH_SHORT).show()
-            }
-            COMMENT_DIALOG -> {
-                val comment = data.getString("comment")
-                Toast.makeText(this, "Comment: $comment", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                Log.d("DialogInput", "Received: $data")
-            }
+            DURATION_DIALOG -> duration = data.getDouble("duration")
+            DISTANCE_DIALOG -> distance = data.getDouble("distance")
+            CALORIES_DIALOG -> calories = data.getDouble("calories")
+            HR_DIALOG -> heartRate = data.getDouble("heartRate")
+            COMMENT_DIALOG -> comment = data.getString("comment").toString()
         }
+        Toast.makeText(this, "Updated variables: duration=$duration, distance=$distance, calories=$calories, hr=$heartRate, comment=$comment", Toast.LENGTH_SHORT).show()
+    }
+
+    // helper function to combine date and time
+    fun getCombinedDateTime(year: Int, month: Int, day: Int, hour: Int, minute: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+        calendar.set(Calendar.HOUR_OF_DAY, hour)
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val dateTime = calendar.time
+        return dateTime
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
