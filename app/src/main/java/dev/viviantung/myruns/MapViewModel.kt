@@ -14,11 +14,16 @@ import android.os.Handler
 
 class MapViewModel :  ViewModel(), ServiceConnection {
     private var myMessageHandler: MyMessageHandler
+
     private val _mapper = MutableLiveData<LatLng>()
     val mapper: LiveData<LatLng>
         get() {
             return _mapper
         }
+    private val _latestLocation = MutableLiveData<LatLng>()
+    val latestLocation: LiveData<LatLng> get() = _latestLocation
+    private val _pathPoints = MutableLiveData<MutableList<LatLng>>(mutableListOf())
+    val pathPoints: LiveData<MutableList<LatLng>> get() = _pathPoints
 
     init {
         myMessageHandler = MyMessageHandler(Looper.getMainLooper())
@@ -37,10 +42,12 @@ class MapViewModel :  ViewModel(), ServiceConnection {
     inner class MyMessageHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
             if (msg.what == TrackingService.MSG_INT_VALUE) {
-                val bundle = msg.data
-                val latLng = bundle.getParcelable<LatLng>(TrackingService.INT_KEY)
+                val latLng = msg.data.getParcelable<LatLng>(TrackingService.INT_KEY)
                 latLng?.let {
-                    _mapper.value = it
+                    _latestLocation.value = it
+                    val currentPath = _pathPoints.value ?: mutableListOf()
+                    currentPath.add(it)
+                    _pathPoints.value = currentPath
                 }
             }
         }

@@ -13,9 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 
 
 class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
@@ -28,6 +33,10 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
     private lateinit var cancelButton: Button
 
     private lateinit var mapViewModel: MapViewModel
+
+    private var startMarker: Marker? = null
+    private var endMarker: Marker? = null
+    private var pathPolyline: Polyline? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +55,38 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
         mapFragment.getMapAsync(this)
 
 
-        mapViewModel.mapper.observe(this) { latLng ->
-            if (::mMap.isInitialized && latLng != null) {
-                // Move/center map or extend the polyline
-                mMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+        mapViewModel.pathPoints.observe(this) { points ->
+            if (points.isEmpty() || !::mMap.isInitialized) return@observe
 
-                // Example: add marker (you’ll likely replace this with a single polyline)
-                mMap.addMarker(com.google.android.gms.maps.model.MarkerOptions().position(latLng))
+            val latestLatLng = points.last()
+
+            // Start marker
+            if (startMarker == null) {
+                startMarker = mMap.addMarker(
+                    MarkerOptions().position(points.first()).title("Start")
+                )
             }
+
+            // End marker
+            if (endMarker == null) {
+                endMarker = mMap.addMarker(
+                    MarkerOptions().position(latestLatLng).title("Current")
+                )
+            } else {
+                endMarker?.position = latestLatLng
+            }
+
+            // Polyline
+            if (pathPolyline == null) {
+                pathPolyline = mMap.addPolyline(
+                    PolylineOptions().addAll(points).width(8f)
+                )
+            } else {
+                pathPolyline?.points = points
+            }
+
+            // Center map on latest location
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latestLatLng, 16f))
         }
 
         // Start tracking service (after permissions)

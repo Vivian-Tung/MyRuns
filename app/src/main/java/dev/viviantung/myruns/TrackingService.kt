@@ -29,11 +29,9 @@ class TrackingService: Service(), LocationListener  {
     private val PERMISSION_REQUEST_CODE = 0
     private lateinit var locationManager: LocationManager
 //    private var mapCentered = false
-    private lateinit var  markerOptions: MarkerOptions
-    private lateinit var  polylineOptions: PolylineOptions
-    private lateinit var  polylines: ArrayList<Polyline>
+
 //    private lateinit var statsView: TextView
-    val pathPointsLiveData = MutableLiveData<MutableList<LatLng>>()
+
     private lateinit var  myBinder: MyBinder
     private var msgHandler: Handler? = null
 
@@ -135,17 +133,17 @@ class TrackingService: Service(), LocationListener  {
         currentPath.add(latLng)
         pathPoints.postValue(currentPath)
 
-        lastLocation?.let {
-            totalDistance += it.distanceTo(location)
-        }
-        lastLocation = location
-
         val msg = android.os.Message.obtain()
         msg.what = MSG_INT_VALUE
         val bundle = android.os.Bundle()
         bundle.putParcelable(INT_KEY, latLng)
         msg.data = bundle
         msgHandler?.sendMessage(msg)
+
+        lastLocation?.let {
+            totalDistance += it.distanceTo(location)
+        }
+        lastLocation = location
     }
 
     private fun buildNotification(): Notification {
