@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.widget.Spinner
 
@@ -55,10 +53,11 @@ class FragmentStart : Fragment() {
                 intent.putExtra("EXTRA_ACTIVITY_TYPE", selectedActivity)
                 startActivity(intent)
             } else if (selectedInput == "GPS") {
-                val intent: Intent = Intent(getActivity(), MapActivity::class.java)
+                val intent: Intent = Intent(getActivity(), MapDisplayActivity::class.java)
+                intent.putExtra("EXTRA_ACTIVITY_TYPE", selectedActivity)
                 startActivity(intent)
             } else if (selectedInput == "Automatic") {
-                val intent: Intent = Intent(getActivity(), MapActivity::class.java)
+                val intent: Intent = Intent(getActivity(), MapDisplayActivity::class.java)
                 startActivity(intent)
             }
         }
