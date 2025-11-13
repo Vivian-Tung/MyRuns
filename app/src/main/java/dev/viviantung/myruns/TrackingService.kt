@@ -53,7 +53,8 @@ class TrackingService: Service(), LocationListener  {
 //    val stats = MutableLiveData<TrackingStats>()
 
     private var lastLocation: Location? = null
-    private var totalDistance = 0.0
+    private var totalDistance = 0.0 // in meters
+    private var startTime: Long = 0L
 
 
     override fun onCreate() {
@@ -96,6 +97,9 @@ class TrackingService: Service(), LocationListener  {
         fun setmsgHandler(handler: Handler) {
             msgHandler = handler
         }
+        fun getDistance() = totalDistance
+        fun getDuration() = (System.currentTimeMillis() - startTime) / 1000.0
+        fun getPath() = pathPoints.value ?: mutableListOf()
     }
     override fun onBind(intent: Intent?): IBinder {
         return MyBinder()
@@ -133,17 +137,17 @@ class TrackingService: Service(), LocationListener  {
         currentPath.add(latLng)
         pathPoints.postValue(currentPath)
 
+        lastLocation?.let {
+            totalDistance += it.distanceTo(location)
+        }
+        lastLocation = location
+
         val msg = android.os.Message.obtain()
         msg.what = MSG_INT_VALUE
         val bundle = android.os.Bundle()
         bundle.putParcelable(INT_KEY, latLng)
         msg.data = bundle
         msgHandler?.sendMessage(msg)
-
-        lastLocation?.let {
-            totalDistance += it.distanceTo(location)
-        }
-        lastLocation = location
     }
 
     private fun buildNotification(): Notification {

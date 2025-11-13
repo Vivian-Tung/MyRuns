@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 // to build the database
-@Database(entities = [Exercise::class], version = 2)
+@Database(entities = [Exercise::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class ExerciseDatabase : RoomDatabase() {
     abstract val exerciseDatabaseDao: ExerciseDatabaseDao

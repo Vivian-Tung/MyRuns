@@ -45,6 +45,6 @@ data class Exercise (
     @ColumnInfo(name = "comment_column")
     var comment: String = "",
 
-    @ColumnInfo(name = "lat_column")
+    @ColumnInfo(name = "lat_lng_column")
     var location: String = "",
 )
