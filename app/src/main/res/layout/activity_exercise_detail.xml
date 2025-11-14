@@ -12,116 +12,128 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/detail_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/detail_text_container"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Input Type">
-    </TextView>
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Input Type">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/input_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/input_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Activity Type">
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Activity Type">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/activity_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/activity_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Date and time">
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date and time">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/datetime_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/datetime_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Duration">
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/duration_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/duration_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Distance">
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Distance">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/distance_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/distance_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Calories">
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calories">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/cals_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/cals_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Heart Rate">
-    </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Heart Rate">
+        </TextView>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="placeholder"
-        android:id="@+id/hr_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:inputType="none">
-    </EditText>
-
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="placeholder"
+            android:id="@+id/hr_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none">
+        </EditText>
+    </LinearLayout>
 </LinearLayout>

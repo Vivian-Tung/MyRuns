@@ -193,6 +193,7 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
             val intent = Intent()
             intent.action = TrackingService.STOP_SERVICE_ACTION
             sendBroadcast(intent)
+            Toast.makeText(this, "No data was saved!", Toast.LENGTH_SHORT).show()
             finish();
         }
     }
