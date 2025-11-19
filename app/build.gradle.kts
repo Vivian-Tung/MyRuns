@@ -71,5 +71,5 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
     implementation(libs.play.services.maps)
-
+    implementation(files("libs/weka.jar"))
 }

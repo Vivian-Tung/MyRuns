@@ -9,6 +9,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -19,13 +23,25 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
-import androidx.core.content.ContextCompat.registerReceiver
-class TrackingService: Service(), LocationListener  {
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import weka.core.Attribute
+import weka.core.Debug
+import weka.core.DenseInstance
+import weka.core.Instances
+import java.io.File
+import java.security.KeyStore
+import java.text.DecimalFormat
+import java.util.ArrayList
+import java.util.concurrent.ArrayBlockingQueue
+
+class TrackingService: Service(), LocationListener, SensorEventListener   {
     private val PERMISSION_REQUEST_CODE = 0
     private lateinit var locationManager: LocationManager
 //    private var mapCentered = false
@@ -56,9 +72,20 @@ class TrackingService: Service(), LocationListener  {
     private var totalDistance = 0.0 // in meters
     private var startTime: Long = 0L
 
+    // sensor vars
+    private lateinit var mDataset: Instances
+    private lateinit var mClassAttribute: Attribute
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+    private var mAccBuffer = ArrayBlockingQueue<Double>(Globals.ACCELEROMETER_BLOCK_CAPACITY)
+    private var sensorJob: Job? = null
+    private val mFeatLen = Globals.ACCELEROMETER_BLOCK_CAPACITY + 2
+    private lateinit var activityType: String
+
 
     override fun onCreate() {
         super.onCreate()
+
         // set up notif
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel() // ensure channel exists first
@@ -79,11 +106,56 @@ class TrackingService: Service(), LocationListener  {
     // notif fcns
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         initLocationManager()
+
+        // register accelerometer
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+        sensorManager.registerListener(
+            this,
+            accelerometer,
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+
+        // Create the container for attributes
+        val allAttr = ArrayList<Attribute>()
+
+        // Adding FFT coefficient attributes
+        val df = DecimalFormat("0000")
+        for (i in 0 until Globals.ACCELEROMETER_BLOCK_CAPACITY) {
+            allAttr.add(Attribute(Globals.FEAT_FFT_COEF_LABEL + df.format(i.toLong())))
+        }
+        // Adding the max feature
+        allAttr.add(Attribute(Globals.FEAT_MAX_LABEL))
+
+        // Declare a nominal attribute along with its candidate values
+        val labelItems = ArrayList<String>(3)
+        labelItems.add(Globals.CLASS_LABEL_STANDING)
+        labelItems.add(Globals.CLASS_LABEL_WALKING)
+        labelItems.add(Globals.CLASS_LABEL_RUNNING)
+        labelItems.add(Globals.CLASS_LABEL_OTHER)
+        mClassAttribute = Attribute(Globals.CLASS_LABEL_KEY, labelItems)
+        allAttr.add(mClassAttribute)
+
+        // Construct the dataset with the attributes specified as allAttr and
+        // capacity 10000
+        mDataset = Instances(Globals.FEAT_SET_NAME, allAttr, Globals.FEATURE_SET_CAPACITY)
+
+        // Set the last column/attribute (standing/walking/running) as the class
+        // index for classification
+        mDataset.setClassIndex(mDataset.numAttributes() - 1)
+
+        // start worker coroutine for activity classification
+         startClassificationWorker()
+
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        // stop the accerlerometer
+        sensorManager.unregisterListener(this)
+        sensorJob?.cancel()
+
         if (locationManager != null)
             locationManager.removeUpdates(this)
         println("debug: onDestroy called")
@@ -185,4 +257,82 @@ class TrackingService: Service(), LocationListener  {
             unregisterReceiver(myBroadcastReceiver)
         }
     }
+
+    // sensor functions
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type == Sensor.TYPE_LINEAR_ACCELERATION) {
+            val mag = kotlin.math.sqrt(
+                (event.values[0] * event.values[0] +
+                        event.values[1] * event.values[1] +
+                        event.values[2] * event.values[2])
+            ).toDouble()
+
+            try {
+                mAccBuffer.add(mag)
+            } catch (e: IllegalStateException) {
+                // Buffer full — double its size
+                val newBuf = ArrayBlockingQueue<Double>(mAccBuffer.size * 2)
+                mAccBuffer.drainTo(newBuf)
+                mAccBuffer = newBuf
+                mAccBuffer.add(mag)
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun startClassificationWorker() {
+        sensorJob = CoroutineScope(Dispatchers.Default).launch {
+
+            val inst = DenseInstance(mFeatLen).apply {
+                setDataset(mDataset)
+            }
+
+            val N = Globals.ACCELEROMETER_BLOCK_CAPACITY
+            val accBlock = DoubleArray(N)
+            val im = DoubleArray(N)
+            val fft = FFT(N)
+
+            var blockSize = 0
+
+            while (isActive) {
+                try {
+                    val next = mAccBuffer.take()
+                    accBlock[blockSize++] = next
+
+                    if (blockSize == N) {
+                        blockSize = 0
+
+                        // FFT
+                        fft.fft(accBlock, im)
+
+                        for (i in accBlock.indices) {
+                            val mag = kotlin.math.sqrt(accBlock[i] * accBlock[i] + im[i] * im[i])
+                            inst.setValue(i, mag)
+                            im[i] = 0.0
+                        }
+
+                        // add max value as feature
+                        val maxVal = accBlock.maxOrNull() ?: 0.0
+                        inst.setValue(N, maxVal)
+
+                        // convert DenseInstance to Object[] for static classifier
+                        val values = Array(mFeatLen) { idx -> inst.value(idx) as Any }
+
+                        // static classification
+                        val pIdx = WekaClassifier.classify(values)
+                        val label = mDataset.classAttribute().value(pIdx.toInt())
+
+                        // update actvity type
+                        activityType = label
+//                        Log.d("activityTyper","label: $label")
+
+                    }
+                } catch (_: Exception) {}
+            }
+        }
+    }
+
+
+
 }

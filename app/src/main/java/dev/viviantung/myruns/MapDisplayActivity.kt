@@ -49,6 +49,7 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
     private lateinit var exerciseViewModel: ExerciseViewModel
 
     private lateinit var activityType: String // need to create a map from activity to ints
+    private var activityTypeInt = -1
     private var duration = 0.0
     private var distance = 0.0
     private var pace = 0.0
@@ -73,7 +74,7 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
 
 
         activityType = getIntent().getStringExtra("EXTRA_ACTIVITY_TYPE").toString()
-        val activityTypeInt = ACTIVITYTYPE.indexOf(activityType)
+        activityTypeInt = ACTIVITYTYPE.indexOf(activityType)
 
         // set up the database stuff
         database = ExerciseDatabase.getInstance(this)
@@ -202,6 +203,18 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
         return super.onCreateOptionsMenu(menu)
     }
 
+    fun updateStatsUI() {
+        val activityName = ACTIVITYTYPE[activityTypeInt]
+        val durationStr = formatDuration(duration)
+        val distanceStr = formatDistance(distance)
+
+        statsView.text =
+            "Activity: $activityName\n" +
+                    "Duration: $durationStr\n" +
+                    "Distance: $distanceStr"
+    }
+
+    private fun formatDistance(totalDistanceMeters: Any) {}
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -309,5 +322,15 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
     override fun onStop() {
         super.onStop()
         unbindService(mapViewModel)
+    }
+
+    private fun formatDuration(seconds: Double): String {
+        val m = seconds / 60
+        val s = seconds % 60
+        return String.format("%02d:%02d", m, s)
+    }
+
+    private fun formatDistance(meters: Double): String {
+        return String.format("%.2f km", meters / 1000.0)
     }
 }
