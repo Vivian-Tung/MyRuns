@@ -17,7 +17,7 @@ class ExerciseAdapter(
 ) {
 
     private val ACTIVITYTYPE = arrayOf(
-        "Run", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard"
+        "Running", "Walking", "Standing", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard", "Others"
     )
 
     // mapping between index and input type
@@ -32,7 +32,9 @@ class ExerciseAdapter(
         // need to add units here somehow need to pass the data here and also change the view
         fun bind(exercise: Exercise) {
             // trying to convert int to string to render it
-            val activityTypeStr = ACTIVITYTYPE.elementAt(exercise.activityType)
+            val safeIndex = exercise.activityType.coerceIn(0, ACTIVITYTYPE.size - 1)
+            val label = ACTIVITYTYPE[safeIndex]
+            val activityTypeStr = label
             val inputTypeStr = INPUTTYPE.elementAt(exercise.inputType)
 
             inputTypeText.text = "${inputTypeStr}:"

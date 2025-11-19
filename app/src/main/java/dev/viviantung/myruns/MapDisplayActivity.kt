@@ -59,7 +59,7 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
     private var comment = ""
 
     private val ACTIVITYTYPE = arrayOf(
-        "Run", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard"
+        "Running", "Walking", "Standing", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard", "Others"
     )
 
 
@@ -103,9 +103,30 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
         bindService(serviceIntent, object : android.content.ServiceConnection {
             override fun onServiceConnected(name: android.content.ComponentName?, binder: android.os.IBinder?) {
                 trackingServiceBinder = binder as TrackingService.MyBinder
+
+                // Set up the updater so the service can push predicted labels to the ViewModel
+                trackingServiceBinder.setPredictedActivityUpdater { label ->
+                    mapViewModel.updatePredictedActivity(label)
+                }
+
+                // observe LiveData from ViewModel
+                mapViewModel.predictedActivity.observe(this@MapDisplayActivity) { predictedLabel ->
+                    if (predictedLabel != null) {
+                        val predictedLabelSafe = predictedLabel ?: "Others" // fallback if null
+                        activityTypeInt = ACTIVITYTYPE.indexOf(predictedLabelSafe)
+                        if (activityTypeInt == -1) {
+                            activityTypeInt = ACTIVITYTYPE.indexOf("Others").takeIf { it != -1 } ?: 0 }
+                            activityType = predictedLabel
+                        activityType = ACTIVITYTYPE[activityTypeInt]
+                        Log.d("activityTyper", "activity type from mapdisplay $activityType")
+                        updateStatsUI()
+                    }
+                }
             }
             override fun onServiceDisconnected(name: android.content.ComponentName?) {}
         }, BIND_AUTO_CREATE)
+
+        //bind to service for activity predictor
 
 
         mapViewModel.pathPoints.observe(this) { points ->
@@ -145,8 +166,6 @@ class MapDisplayActivity: AppCompatActivity(), OnMapReadyCallback  {
         // Start tracking service (after permissions)
         checkAllPermissions()
 
-        // when this activity gets launched, it should start the tracker service and bind to it
-        // so that it can update the map in here i think
 
         // map stats
         statsView = findViewById(R.id.type_stats)

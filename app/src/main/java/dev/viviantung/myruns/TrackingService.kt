@@ -166,12 +166,23 @@ class TrackingService: Service(), LocationListener, SensorEventListener   {
 
     // binder logic
     inner class MyBinder : Binder() {
+        private var predictedActivityUpdater: ((String) -> Unit)? = null // for activity
+
         fun setmsgHandler(handler: Handler) {
             msgHandler = handler
         }
         fun getDistance() = totalDistance
         fun getDuration() = (System.currentTimeMillis() - startTime) / 1000.0
         fun getPath() = pathPoints.value ?: mutableListOf()
+
+
+        fun setPredictedActivityUpdater(updater: (String) -> Unit) {
+            predictedActivityUpdater = updater
+        }
+
+        fun pushPredictedActivity(label: String) {
+            predictedActivityUpdater?.invoke(label)
+        }
     }
     override fun onBind(intent: Intent?): IBinder {
         return MyBinder()
@@ -325,7 +336,8 @@ class TrackingService: Service(), LocationListener, SensorEventListener   {
 
                         // update actvity type
                         activityType = label
-//                        Log.d("activityTyper","label: $label")
+                        Log.d("activityTyper","label: $label")
+                        (myBinder).pushPredictedActivity(label)
 
                     }
                 } catch (_: Exception) {}

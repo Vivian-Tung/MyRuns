@@ -19,10 +19,10 @@ object Globals {
     const val ACTION_MOTION_UPDATED = "MYRUNS_MOTION_UPDATED"
 
     const val CLASS_LABEL_KEY = "label"
-    const val CLASS_LABEL_STANDING = "standing"
-    const val CLASS_LABEL_WALKING = "walking"
-    const val CLASS_LABEL_RUNNING = "running"
-    const val CLASS_LABEL_OTHER = "others"
+    const val CLASS_LABEL_STANDING = "Standing"
+    const val CLASS_LABEL_WALKING = "Walking"
+    const val CLASS_LABEL_RUNNING = "Running"
+    const val CLASS_LABEL_OTHER = "Others"
 
     const val FEAT_FFT_COEF_LABEL = "fft_coef_"
     const val FEAT_MAX_LABEL = "max"

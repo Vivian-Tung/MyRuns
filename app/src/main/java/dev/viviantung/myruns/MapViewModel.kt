@@ -29,6 +29,14 @@ class MapViewModel :  ViewModel(), ServiceConnection {
         myMessageHandler = MyMessageHandler(Looper.getMainLooper())
     }
 
+    private val _predictedActivity = MutableLiveData<String>()
+    val predictedActivity: LiveData<String> get() = _predictedActivity
+
+    fun updatePredictedActivity(label: String) {
+        _predictedActivity.postValue(label)
+    }
+
+
     override fun onServiceConnected(name: ComponentName, iBinder: IBinder) {
         println("debug: ViewModel: onServiceConnected() called; ComponentName: $name")
         val tempBinder = iBinder as TrackingService.MyBinder
@@ -52,4 +60,6 @@ class MapViewModel :  ViewModel(), ServiceConnection {
             }
         }
     }
+
+
 }

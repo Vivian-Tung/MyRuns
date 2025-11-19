@@ -48,7 +48,10 @@
         <item>Automatic</item>
     </string-array>
     <string-array name="activity_array">
-        <item>Run</item>
+        <item>Running</item>
+        <item>Walking</item>
+        <item>Standing</item>
+        <item>Others</item>
         <item>Ultimate Frisbee</item>
         <item>Pickleball</item>
         <item>Swim</item>

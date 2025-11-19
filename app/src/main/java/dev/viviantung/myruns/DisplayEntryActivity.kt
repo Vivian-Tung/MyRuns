@@ -29,7 +29,7 @@ class DisplayEntryActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // mapping between index and activity type
     private val ACTIVITYTYPE = arrayOf(
-        "Run", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard"
+        "Running", "Walking", "Standing", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard", "Others"
     )
     private lateinit var viewModel: ExerciseViewModel
     private var exerciseId: Long = 0L

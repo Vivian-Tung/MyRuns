@@ -37,7 +37,7 @@ class ManualActivity: AppCompatActivity(), DatePickerDialog.OnDateSetListener, T
 
     // mapping between index and activity type
     private val ACTIVITYTYPE = arrayOf(
-        "Run", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard"
+        "Running", "Walking", "Standing", "Others", "Ultimate Frisbee", "Pickleball", "Swim", "Strength", "Bike", "Badminton", "Basketball", "Volleyball", "Golf", "Standup Paddleboard"
     )
 
     private lateinit var myListView: ListView
