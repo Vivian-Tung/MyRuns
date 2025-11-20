@@ -75,7 +75,7 @@ class DisplayEntryActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 // Show map only if GPS entry
-                if (exercise.inputType == 1 && exercise.location.isNotEmpty()) {
+                if (exercise.inputType != 0 && exercise.location.isNotEmpty()) {
                     mapContainer.visibility = View.VISIBLE
 
                     gpsPoints = decodePathString(exercise.location)

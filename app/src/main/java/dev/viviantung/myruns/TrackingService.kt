@@ -85,6 +85,7 @@ class TrackingService: Service(), LocationListener, SensorEventListener   {
 
     override fun onCreate() {
         super.onCreate()
+        myBinder = MyBinder()
 
         // set up notif
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -182,10 +183,12 @@ class TrackingService: Service(), LocationListener, SensorEventListener   {
 
         fun pushPredictedActivity(label: String) {
             predictedActivityUpdater?.invoke(label)
+            Log.d("TrackingService", "Predicted label sent: $label")
+
         }
     }
     override fun onBind(intent: Intent?): IBinder {
-        return MyBinder()
+        return myBinder
     }
 
     // tracking/map logic ====================================================================================
